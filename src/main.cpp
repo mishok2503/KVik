@@ -2,10 +2,13 @@
 #include <cstring>
 
 #include "../smhasher/src/MurmurHash3.h"
+#include "../smhasher/src/SpeedTest.h"
 
 int main(int argc, char **argv) {
-    __uint128_t out;
-    MurmurHash3_x86_128(argv[1], strlen(argv[1]), 239, &out);
-    std::cout << ((uint64_t) (out >> 64)) << ' ' << (uint64_t) out << std::endl;
+    constexpr int seed = 239;
+    double unused;
+    for (int i = 20; i <= 1e4; i += 200) {
+        TinySpeedTest(MurmurHash3_x64_128, 42, i, seed, true, unused);
+    }
     return 0;
 }
