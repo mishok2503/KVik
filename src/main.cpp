@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
                     std::cout.flush();
                 }
                 TinySpeedTest(func.func, unused, key_size, seed, verbose, res);
-                out << res << ",\n"[key_size + step > max_size];
+                out << '\t' << key_size << " : " << res << '\n';
             }
             out << '\n';
         }
