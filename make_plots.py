@@ -25,7 +25,7 @@ def build_from_file(filename):
         for line in f:
             if line == "\n":
                 if pts:
-                    plt.plot(curpts_x, curpts_y, label=curlabel)
+                    plt.plot(curpts_x, curpts_y, label=curlabel, linewidth=2)
                     curpts_x = []
                     curpts_y = []
                     curlabel = ""
