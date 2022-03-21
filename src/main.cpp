@@ -4,9 +4,9 @@
 #include <vector>
 #include <string>
 
-#include "MurmurHash3.h"
-#include "SpeedTest.h"
-#include "xxhash.h"
+#include "../smhasher/src/MurmurHash3.h"
+#include "../smhasher/src/SpeedTest.h"
+#include "../xxHash/xxhash.h"
 
 struct HashFunc {
     pfHash func;
