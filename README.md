@@ -14,7 +14,7 @@ Enviroment: x64, Linux and Windows. That's why we use implementations with suffi
   </tr>
   <tr>
     <td><img src="artifacts/mishok/images/res3_small_plot.png" width="420" /></td>
-    <td><img src="artifacts/mishok/images/res2_small_plot.png" width="420" /></td> 
+    <td><img src="artifacts/ilbro/images/res2_small_plot.png" width="420" /></td> 
   </tr>
 </table>
 
@@ -28,6 +28,6 @@ Enviroment: x64, Linux and Windows. That's why we use implementations with suffi
   </tr>
   <tr>
     <td><img src="artifacts/mishok/images/res3_big_plot.png" width="420" /></td>
-    <td><img src="artifacts/mishok/images/res2_big_plot.png" width="420" /></td> 
+    <td><img src="artifacts/ilbro/images/res2_big_plot.png" width="420" /></td> 
   </tr>
 </table>
