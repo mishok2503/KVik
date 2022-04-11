@@ -9,9 +9,6 @@
 
 using namespace std::chrono;
 
-static char SPEED_DIR[] = "artifacts/compression_speed";
-static char COEF_DIR[] = "artifacts/compression_coef";
-
 struct timer {
     void record() {
         a = steady_clock::now();
@@ -51,18 +48,6 @@ size_t decompress_lz4(char *src, char *dst, int srcCount, int dstCount) {
 
 size_t decompress_zstd(char *src, char *dst, int srcCount, int dstCount) {
     return ZSTD_decompress(dst, dstCount, src, srcCount);
-}
-
-
-
-void test_correctness(
-        char *in_filename,
-        size_t (*compressor)(char *, char *, size_t, size_t, int),
-        size_t (*decompressor) (char *, char *, int, int),
-        int compression_lvl = 1
-                ) {
-
-
 }
 
 int main(int argc, char ** argv) {
@@ -109,7 +94,7 @@ int main(int argc, char ** argv) {
                 compr_time.stop();
 
                 out_times << compr_time.tell_mics().count() << ' ';
-                out_speed << ((double) data.size() * 1e6)/  ((double) compr_time.tell_mics().count() * (double) (1 << 20)) << ' ';
+                out_speed << ((double) data.size() * 1e6) /  ((double) compr_time.tell_mics().count() * (double) (1 << 20)) << ' ';
                 out_coefs << (double) compressed_size / (double) data.size() * 100 << ' ';
 
                 char *decompressed_data = new char[data.size()];
