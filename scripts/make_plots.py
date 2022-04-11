@@ -6,7 +6,7 @@ import re
 sns.color_palette('deep')
 
 
-def build_from_file(filename):
+def build_from_file(filename, units, test_name):
     labels = ['lz4', 'zstd 1', 'zstd 7']
     values = [[], [], []]
     files = []
@@ -14,6 +14,7 @@ def build_from_file(filename):
         for line in f:
             a = re.split(r'[ \n]', line)
             files.append(a.pop(0))
+            a.pop(-1)
             a.pop(-1)
             values1 = list(map(float, a))
             for i in range(len(values1)):
@@ -24,14 +25,15 @@ def build_from_file(filename):
     fig.set_size_inches(12, 6)
     for i in range(len(labels)):
         ax.bar(x - width * len(labels) / 2 + width / 2 + width * i, values[i], width, label=labels[i])
-    ax.set_ylabel('Parrots')
-    ax.set_title('Performance on different files')
+    ax.set_ylabel(units)
+    ax.set_title(test_name)
     ax.set_xticks(x, files)
     ax.legend()
     fig.tight_layout()
-    plt.show()
+    #plt.show()
     fig.savefig(filename.replace(".txt", "") + "_plot.png")
 
 
-build_from_file("../times.txt")
-build_from_file("../coefs.txt")
+build_from_file("../times.txt", "Microseconds", "Compression time")
+build_from_file("../coefs.txt", "Parrots", "Compression coefficient")
+build_from_file("../speed.txt", "MB/s", "Compression speed")
