@@ -7,7 +7,7 @@ sns.color_palette('deep')
 
 
 def build_from_file(filename, units, test_name):
-    labels = ['lz4', 'zstd 1', 'zstd 7']
+    labels = ['lz4', 'zstd -1', 'zstd -7']
     values = [[], [], []]
     files = []
     with open(filename, "r") as f:
