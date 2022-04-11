@@ -1,2 +1,9 @@
 .idea
 log.txt
+silesia
+Makefile
+CMakeCache.txt
+CMakeFiles
+HSE_DSS
+cmake_install.cmake
+cmake-build-debug
