@@ -79,10 +79,12 @@ int main(int argc, char ** argv) {
 
     std::ofstream out_coefs("coefs.txt");
     std::ofstream out_times("times.txt");
+    std::ofstream out_speed("speed.txt");
 
     for (int i = 1; i < argc; ++i) {
         out_coefs << argv[i] << ' ';
         out_times << argv[i] << ' ';
+        out_speed << argv[i] << ' ';
         for (auto [compressor, decompressor] : compressor_decompressor_pairs) {
             for (auto lvl : compression_lvls) {
                 std::vector<char> data;
@@ -107,6 +109,7 @@ int main(int argc, char ** argv) {
                 compr_time.stop();
 
                 out_times << compr_time.tell_mics().count() << ' ';
+                out_speed << ((double) data.size() * 1e6)/  ((double) compr_time.tell_mics().count() * (double) (1 << 20)) << ' ';
                 out_coefs << (double) compressed_size / (double) data.size() * 100 << ' ';
 
                 char *decompressed_data = new char[data.size()];
@@ -125,6 +128,7 @@ int main(int argc, char ** argv) {
                 if (compressor == compress_via_lz4) break;
             }
         }
+        out_speed << '\n';
         out_times << '\n';
         out_coefs << '\n';
     }
