@@ -14,3 +14,5 @@ cd ../..
 cd lz4
 
 make && sudo make install
+
+cd ..
