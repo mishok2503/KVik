@@ -1,5 +1,46 @@
 # Key value store
 
+## Notes
+
+This storage doesn't support values with variable length by default, so possible approaches are
+
+ - Use fixed size that is sufficient for all your values (can be really inefficient for situations when most of your values are small)
+ - Build modification on top of this implementation to support it (update operations will be a bit more complicated, maybe some other insignificant changes)
+
+By default, expected `key` size is `128` bits and expected `value` size is `2` kilobytes.
+
+## Architecture
+
+By red color we will denote everything that is stored in `DRAM`, blue will stand for `SSD` storage, purple means that component is stored in `HDD`.
+
+Thus, general architecture is as follows
+
+<p align="center">
+  <img src="resources/images/architecture.png" alt="storage architecture">
+</p>
+
+Now let's see what each element of diagram is responsible for
+
+### Shard controller
+
+In order to distribute requests on independent workers for each key that comes as a part of request (get, insert, update, delete) we use hashing of keys (`XXH32`)
+ and choose bucket depending on range where this hash appeared to be (for example, if we have 10 shards, then each of those will theoretically be responsible for approximately `429496729` keys)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Previous version of README
+
+
 **Архитектура**
 
 Главные компоненты: `Filter (Bloom's), Log HashTable (open addressing, Robin Hood hashing, on DRAM) + Log file(SSD)`, `Global HashTable (closed addressing, bucket is memory page, on SSD)`,
