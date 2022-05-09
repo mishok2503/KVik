@@ -97,3 +97,7 @@ Here is how `insert` operation works in **KVik**: just insert it into `Log Hash 
 Interesting part is how merge operation works because obviously, since `Log Hash Table` is in `DRAM` it will be filled pretty quick. Well, it is also pretty easy actually, keys are sorted in ascending order of hash function that is used in `Index Hash Table`. After that values are inserted as they would be in any ordinary hash mao. The idea of this sorting is to have some keys hit same buckets and therefore using fewer operations with disk.
 
 Another interesting merge is `Hot Files` with `Data File`. Here merge is done very straightforward way: just traverse all records in `Hot Files` and insert them into `Data File` one by one.
+
+### Update
+
+`update` operation is very similar to `insert`. The only important difference is that before actually updating record we apply filter. If filter says that record is definitely not in storage we ignore it. If `update` operation is called you must be sure that record is already in storage (however, this behavior can be modified in the future, be careful with updating library to newer version, read patch notes carefully beforehand).
