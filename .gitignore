@@ -1,2 +1,5 @@
 .idea
 log.txt
+smhasher
+xxHash
+cmake-build-debug
