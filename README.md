@@ -14,7 +14,7 @@ By default, expected `key` size is `128` bits and expected `value` size is `2` k
 
 ## Architecture
 
-By <font color="indianred">red</font> color we will denote everything that is stored in `DRAM`, <font color="darkturquoise">blue</font> will stand for `SSD` storage, <font color="mediumpurple">purple</font> means that component is stored in `HDD`.
+By <span style="color:indianred">red</span> color we will denote everything that is stored in `DRAM`, <span style="color:darkturquoise">blue</span> will stand for `SSD` storage, <span style="color:mediumpurple">purple</span> means that component is stored in `HDD`.
 
 Thus, general architecture is as follows
 
