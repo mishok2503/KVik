@@ -176,4 +176,17 @@ it with a new value. If we want to delete corresponding value there are several 
 `Hot Files` and in `Data File` or in one of those). Deletion from `Data File` will be done exactly the same way as from
 `Log File`. The issue is how to delete from `Data File`. It will be done using lined list. Linked list will store free
 spots for values in `Data File`. It won't maintain correct topology of values in `Data File` but before using it,
-list can be sorted to have less random disk accesses. 
+list can be sorted to have less random disk accesses.
+
+## Metrics
+
+- `Read Amplification Factor =~ 2`
+- `Write Amplification Factor =~ 5` (worst case if none of the heuristics are working)
+- `Space Amplification Factor =~ 1.23`
+- `Memory Overhead =~ 0.865 bytes/key`
+- `Disk Lifetime = ?`
+
+As you can see, this storage will be good solution for you in case read requests are more often than modification
+requests like `update` and `insert` (which is very realistic scenario for many systems). 
+
+For detailed explanation about metrics read [this pdf file](./metrics.pdf).
