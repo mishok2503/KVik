@@ -19,7 +19,7 @@ By <span style="color:indianred">red</span> color we will denote everything that
 Thus, general architecture is as follows
 
 <p align="center">
-  <img src="resources/images/architecture.png" alt="storage architecture">
+  <img src="resources/images/architecture.svg" alt="storage architecture" width="80%">
 </p>
 
 Now let's see what each element of diagram is responsible for
@@ -100,4 +100,4 @@ Another interesting merge is `Hot Files` with `Data File`. Here merge is done ve
 
 ### Update
 
-`update` operation is very similar to `insert`. The only important difference is that before actually updating record we apply filter. If filter says that record is definitely not in storage we ignore it. If `update` operation is called you must be sure that record is already in storage (however, this behavior can be modified in the future, be careful with updating library to newer version, read patch notes carefully beforehand).
+`update` operation is very similar to `insert`. The only important difference is that before actually updating record we apply filter. If filter says that record is definitely not in storage we ignore it. If `update` operation is called you must be sure that record is already in the storage (however, this behavior can be modified in the future, be careful with updating library to newer version, read patch notes carefully beforehand).
