@@ -1,7 +1,7 @@
 # KVik, key value store
 
-This small library was written with following purpose: to create memory efficient, fast and yet simple key value store
-that is able to store huge amount of records
+Memory efficient, fast and yet simple key value store
+that is able to contain huge amount of records
 
 ## Notes
 
