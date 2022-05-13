@@ -32,8 +32,7 @@ Now let's see what each element of diagram is responsible for
 
 In order to distribute requests on independent workers for each key that comes as a part of request (`get`, `insert`
 , `update`, `delete`) we calculate its hash (`XXH32`)
-and choose bucket depending on range where this hash appeared to be (for example, if we have 10 shards, then each of
-those will theoretically be responsible for approximately `429496729` entries). By doing this, we decrease sizes of
+and choose bucket depending on range where this hash appeared to be. By doing this, we decrease sizes of
 files on each shard linearly (with respect to number of shards in assumption that hashes will be distributed uniformly).
 In addition, this idea helps to increase throughput of storage (requests can be handled in parallel on different
 threads).
