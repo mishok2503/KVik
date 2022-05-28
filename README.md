@@ -5,14 +5,14 @@ that is able to contain huge amount of records
 
 ## Notes
 
-This storage doesn't support values with variable length by default, possible approaches to get around are:
+This storage supports values of fixed length by default, possible approaches to introduce variable length:
 
 - Use fixed size that is sufficient for all your values (can be really inefficient for situations when most of your
   values are small)
 - Build modification on top of this implementation to support it (update operations will be a bit more complicated,
   maybe some other insignificant changes)
 
-By default, expected `key` size is `128` bits and expected `value` size is `2` kilobytes.
+By default, expected `key` size is `128 bit` and expected `value` size is `2 KB` .
 
 ## Architecture
 
@@ -33,30 +33,28 @@ Now let's see what each element of diagram is responsible for
 In order to distribute requests on independent workers for each key that comes as a part of request (`get`, `insert`
 , `update`, `delete`) we calculate its hash (`XXH32`)
 and choose bucket depending on range where this hash appeared to be. By doing this, we decrease sizes of
-files on each shard linearly (with respect to number of shards in assumption that hashes will be distributed uniformly).
-In addition, this idea helps to increase throughput of storage (requests can be handled in parallel on different
+files on each shard linearly (with respect to the number of shards in assumption that hash values will be distributed
+uniformly).
+Apart from that, this idea helps to increase throughput of the storage (requests can be handled in parallel on different
 threads).
 
 ### Filter
 
-As in all key value stores that are used in practice, we try to filter out requests with keys that aren't in store yet
-for `delete`, `update` and `get` requests.
+We try to filter out requests with keys that aren't in the store yet for `delete`, `update` and `get` requests.
 
-There are several ways to do it but in out case it was decided to use Bloom's filter since it only requires `O(n)` bits
+There are several ways to do so but in our case it was decided to use Bloom filter since it only requires `O(n)` bits
 of memory and is pretty fast.
 
-Our filter was designed to have small error probability (less than `9%`), it happens when we
-have `4` [4-independent](https://en.wikipedia.org/wiki/K-independent_hashing) hash functions. And number of bits is
-about `5n` where `n` is number of entries stored in **KVik**.
-
-To make filtering really fast, it is, of course, stored in `DRAM` (also, it is easily recovered when we have all data
-from persistent storage devices like SSD and HDD).
+Our filter was designed to have small error probability (less than `9%`), to achieve that we
+use `4` [4-independent](https://en.wikipedia.org/wiki/K-independent_hashing) hash functions and `5n` bits in filter.
 
 ### Log Hash Table
 
-As a request comes it is firstly added to `Log Hash Table` which is basically open addressing hash table that is
-using [Robin Hood hashing](https://programming.guide/robin-hood-hashing.html). This technique helps `Log Hash Table` to
-be more memory efficient and maintain fill factor around `90%`.
+When new request is received it is firstly added to a `Log Hash Table`. `Log Hash Table` is an open addressing hash
+table that
+uses [Robin Hood hashing](https://programming.guide/robin-hood-hashing.html). This technique helps `Log Hash Table` to
+be more memory efficient and maintain fill factor around `90%` (for detailed explanation check
+out [original paper](https://cs.uwaterloo.ca/research/tr/1986/CS-86-14.pdf)).
 
 `Log Hash Table` has a fixed size, so when it is filled it is merged into `Index Hash Table` as well as
 corresponding `Log File` is merged into `Hot Files`
@@ -96,8 +94,8 @@ by `rand` and `std::mt19937`, hashing that was used is `XXH32` with random seed)
 
 Conceptually, it is cache for values of keys that are used most often. This strategy will most likely be implemented
 in the future but for now `Hot Files` will be some kind of intermediate value storage that is a lot faster than storage
-on `HDD` (although [this document](https://gist.github.com/jboner/2841832) is 2012 version, relation between `HDD` and
-`SSD` access latency is still pretty huge).
+on `HDD` (although [this document](https://gist.github.com/jboner/2841832) is 2012 version, difference between `HDD` and
+`SSD` access latency is still huge).
 
 `Hot Files` should also store keys in addition to values. It is done for more efficient merge operation to `Data File`
 (update entry in `Index Hash Table` and check if some information corresponding to this key is already in `Data File`
@@ -105,10 +103,10 @@ so we can just replace this value with a new one)
 
 ### Data File
 
-Data File is one huge file that is stored on `HDD`. It also maintains linked list of deleted entries so that it is easy
+`Data File` is one huge file that is stored on `HDD`. It also maintains linked list of deleted entries so that it is easy
 to put new values on place of deleted ones.
 
-It doesn't store any additional data, only values.
+`Data File` doesn't store any additional data, only values.
 
 ## API
 
@@ -118,64 +116,7 @@ additional complexity for supporting custom user requests written in somewhat li
 
 So, if you actually don't need anything more complex than these operations, **KVik** is a viable option for you.
 
-### Get
-
-Here is how `get` operation works in **KVik**:
-
-1. filter is applied, if it says that value isn't in storage we return `nullptr` immediately (with probability
-   around `91%` for values that are not in storage it will work properly and say so)
-2. request is passed to `Log Hash Table` and it is checked if such key is present there. If so, read corresponding value
-   from `Log File` and return to user.
-3. request is passed to `Index Hash Table` and it is checked if such key is present in there. If so, if it has offset
-   in `Hot Files` present, read value from there, otherwise read it from `Data File`.
-
-### Insert
-
-Here is how `insert` operation works in **KVik**: just insert it into `Log Hash Table` and set bits corresponding to
-this key in filter to ones.
-
-Interesting part is how merge operation works because obviously, since `Log Hash Table` is in `DRAM` it will be filled
-pretty quick. Well, it is also pretty easy actually, keys are sorted in ascending order of hash function that is used
-in `Index Hash Table`. After that values are inserted as they would be in any ordinary hash mao. The idea of this
-sorting is to have some keys hit same buckets and therefore using fewer operations with disk.
-
-Another interesting merge is `Hot Files` with `Data File`. Here merge is done very straightforward way: just traverse
-all records in `Hot Files` and insert them into `Data File` one by one.
-
-### Update
-
-`update` operation is very similar to `insert`. The only important difference is that before actually updating record we
-apply filter.
-If filter says that record is definitely not in storage we ignore it. If `update` operation is called you must be sure
-that record
-is already in the storage (however, this behavior can be modified in the future, be careful with updating library to
-newer version,
-read patch notes carefully beforehand).
-
-### Delete
-
-`delete` operation is logically pretty similar to `get`, it has same steps in it (filter first, log second, index third)
-.
-The only interesting detail is how we actually delete this key from all of these structures in case it was found.
-
-#### Delete from `Log Hash Table`
-
-Deletion of key from hash table with open addressing is as simple as always. But apart from that, we should also delete
-corresponding value from `Log File`. It will be really simple though, we will do it lazily, we won't do anything until
-it overflows (maybe just write some reserved value in corresponding place in `Log File` so that it can be distinguished
-from actual value we want to store). When it does, we will rebuild it from scratch as well as `Log Hash Table`
-(to take new offset into account).
-
-#### Delete from `Index Hash Table`
-
-Deletion of key from index is also going to be lazy. But in this case it won't be a problem for bucket overflow,
-since we scan whole bucket during insertion anyway, let's just store `-1` in both offsets, it will mean that this key
-is actually deleted. So, during next insertion we will scan the entire bucket and if -1 was found we will replace
-it with a new value. If we want to delete corresponding value there are several cases (corresponding value is in
-`Hot Files` and in `Data File` or in one of those). Deletion from `Data File` will be done exactly the same way as from
-`Log File`. The issue is how to delete from `Data File`. It will be done using lined list. Linked list will store free
-spots for values in `Data File`. It won't maintain correct topology of values in `Data File` but before using it,
-list can be sorted to have less random disk accesses.
+For detailed explanation on how these operations work in **KVik** check [this file](./API_DESCRIPTION.md).
 
 ## Metrics
 
@@ -186,6 +127,6 @@ list can be sorted to have less random disk accesses.
 - `Disk Lifetime = ?`
 
 As you can see, this storage will be good solution for you in case read requests are more often than modification
-requests like `update` and `insert` (which is very realistic scenario for many systems). 
+requests like `update` and `insert` (which is realistic scenario for some systems).
 
 For detailed explanation about metrics read [this pdf file](./metrics.pdf).
