@@ -21,7 +21,9 @@ enable_testing()
 add_executable(
         KVik_test
         src/memory/test/DRAMMemoryTests.cpp
+        src/memory/test/FileMemoryTests.cpp
         src/memory/DRAMMemory.cpp
+        src/memory/FileMemory.cpp
 )
 # just an entry point for tests
 target_link_libraries(

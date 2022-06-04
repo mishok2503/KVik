@@ -9,6 +9,7 @@ TEST(DRAMMemoryTest, EmptyBufferContructingWorks) {
 TEST(DRAMMemoryTest, WorkingWithBufferAllocatedByMallocIsCorrect) {
     size_t bufSize = 100;
     void *buf = malloc(100);
+    ASSERT_NE(buf, nullptr);
 
     DRAMMemory memory(buf, bufSize);
     ASSERT_EQ(memory.size(), bufSize);
@@ -25,9 +26,10 @@ TEST(DRAMMemoryTest, WorkingWithBufferAllocatedByMallocIsCorrect) {
         memory.read(i, 1, tmpBuf);
         EXPECT_EQ(*tmpBuf, fillingSymbol);
     }
+    free(buf);
 }
 
-TEST(DRAMMemoryTest, AfterIncorrectMemoryUsageExceptionIsThrown) {
+TEST(DRAMMemoryTest, AfterIncorrectUsageOfEmptyMemoryExceptionIsThrown) {
     size_t bufSize = 0;
     void *buf = nullptr;
 

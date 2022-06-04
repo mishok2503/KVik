@@ -19,7 +19,7 @@ void FixedFileMemory::write(Offset offset, Size count, void *data) {
 
 void FixedFileMemory::read(Offset offset, Size count, void *data) {
     changeFilePosition(offset);
-    if (std::fread(data, 1, count, _file)) {
+    if (std::fread(data, 1, count, _file) != count) {
         throw MemoryException("error during std::fread");
     }
 }
