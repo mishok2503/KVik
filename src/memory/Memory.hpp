@@ -1,17 +1,20 @@
 #ifndef KVIK_MEMORY_H
 #define KVIK_MEMORY_H
 
-#include <stddef.h>
+#include <cstddef>
 #include <stdexcept>
 
 using Offset = size_t;
 using Size = size_t;
 
 struct MemoryException : std::runtime_error {
+
     using std::runtime_error::runtime_error;
+
 };
 
 struct Memory {
+
     virtual void write(Offset offset, Size count, void *data) = 0;
 
     // it was possible to return void* instead, however the problem is that someone should free this memory,
@@ -22,7 +25,8 @@ struct Memory {
 
     virtual Size size() = 0;
 
-    virtual ~Memory() {}
+    virtual ~Memory() = default;
+
 };
 
 #endif

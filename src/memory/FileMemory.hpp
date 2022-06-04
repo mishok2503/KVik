@@ -8,26 +8,33 @@
 #include "Memory.hpp"
 
 struct FixedFileMemory : Memory {
+
 private:
+
     void changeFilePosition(Offset offset);
 
 public:
-    FixedFileMemory(FILE *file);
 
-    virtual void write(Offset offset, Size count, void *data) override;
+    explicit FixedFileMemory(FILE *file);
 
-    virtual void read(Offset offset, Size count, void *data) override;
+    void write(Offset offset, Size count, void *data) override;
 
-    virtual Size size() override;
+    void read(Offset offset, Size count, void *data) override;
+
+    Size size() override;
 
 protected:
+
     FILE *_file;
+
 };
 
 struct ExtendableFileMemory : FixedFileMemory {
-    ExtendableFileMemory(FILE *file);
 
-    virtual void write(Offset offset, Size count, void *data) override;
+    explicit ExtendableFileMemory(FILE *file);
+
+    void write(Offset offset, Size count, void *data) override;
+
 };
 
 #endif
