@@ -1,6 +1,6 @@
 #include "DRAMMemory.hpp"
 
-void DRAMMemory::checkRange(Offset offset, Size count) {
+void DRAMMemory::checkRange(Offset offset, Size count) const {
     if (offset + count > _bufSize) {
         throw MemoryException(
                 "error while working with DRAM memory, attempt to access memory that is out of bounds");

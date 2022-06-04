@@ -10,7 +10,7 @@ struct DRAMMemory : Memory {
 
 private:
 
-    void checkRange(Offset offset, Size count);
+    void checkRange(Offset offset, Size count) const;
 
 public:
 
