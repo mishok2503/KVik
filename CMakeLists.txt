@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(KVik)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 include_directories(src)
 
 include(FetchContent)
@@ -22,8 +22,10 @@ add_executable(
         KVik_test
         src/memory/test/DRAMMemoryTests.cpp
         src/memory/test/FileMemoryTests.cpp
+        src/memory/test/MallocDRAMMemoryAllocatorTests.cpp
         src/memory/DRAMMemory.cpp
         src/memory/FileMemory.cpp
+        src/memory/MallocDRAMMemoryAllocator.cpp
 )
 # just an entry point for tests
 target_link_libraries(

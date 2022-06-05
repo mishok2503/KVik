@@ -6,6 +6,8 @@
 
 #include "Memory.hpp"
 
+struct MallocDRAMMemoryAllocator;
+
 struct DRAMMemory : Memory {
 
 private:
@@ -21,6 +23,8 @@ public:
     void read(Offset offset, Size count, void *data) override;
 
     Size size() noexcept override;
+
+    friend struct MallocDRAMMemoryAllocator;
 
 private:
 
