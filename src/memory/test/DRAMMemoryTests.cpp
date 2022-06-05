@@ -41,6 +41,7 @@ TEST(DRAMMemoryTest, AfterIncorrectUsageOfEmptyMemoryExceptionIsThrown) {
     } catch (std::exception &e) {
         auto &me = dynamic_cast<MemoryException &>(e);
         // std::string constructor is called in order to not compare these values as pointers but as strings
-        ASSERT_EQ(std::string(me.what()), std::string("error while working with DRAM memory, attempt to access memory that is out of bounds"));
+        ASSERT_EQ(std::string(me.what()),
+                  std::string("error while working with DRAM memory, attempt to access memory that is out of bounds"));
     }
 }

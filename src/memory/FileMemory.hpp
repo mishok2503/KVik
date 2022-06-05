@@ -6,6 +6,7 @@
 #include <sys/types.h>
 
 #include "Memory.hpp"
+#include "DirectoryFileMemoryAllocator.hpp"
 
 struct FixedFileMemory : Memory {
 
@@ -15,7 +16,7 @@ private:
 
 public:
 
-    explicit FixedFileMemory(FILE *file);
+    explicit FixedFileMemory(FILE *file, Size size, std::string filename);
 
     void write(Offset offset, Size count, void *data) override;
 
@@ -27,11 +28,19 @@ protected:
 
     FILE *_file;
 
+    Size _size;
+
+    std::string _filename;
+
+    template<typename T>
+    friend
+    struct DirectoryFileMemoryAllocator;
+
 };
 
 struct ExtendableFileMemory : FixedFileMemory {
 
-    explicit ExtendableFileMemory(FILE *file);
+    explicit ExtendableFileMemory(FILE *file, Size size, std::string filename);
 
     void write(Offset offset, Size count, void *data) override;
 

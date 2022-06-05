@@ -23,9 +23,11 @@ add_executable(
         src/memory/test/DRAMMemoryTests.cpp
         src/memory/test/FileMemoryTests.cpp
         src/memory/test/MallocDRAMMemoryAllocatorTests.cpp
+        src/memory/test/DirectoryFileMemoryAllocatorTests.cpp
         src/memory/DRAMMemory.cpp
         src/memory/FileMemory.cpp
         src/memory/MallocDRAMMemoryAllocator.cpp
+        src/memory/DirectoryFileMemoryAllocator.cpp
 )
 # just an entry point for tests
 target_link_libraries(

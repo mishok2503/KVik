@@ -8,11 +8,11 @@ TEST(FileMemoryTest, EmptyFileWorks) {
     FILE *f = fopen(filename, "w+");
     ASSERT_NE(f, nullptr);
 
-    FixedFileMemory memory(f);
+    FixedFileMemory memory(f, 0, filename);
     ASSERT_EQ(memory.size(), 0);
 
-    ASSERT_EQ(remove(filename), 0);
     fclose(f);
+    ASSERT_EQ(remove(filename), 0);
 }
 
 TEST(FileMemoryTest, BasicFileFilledWithOneValueWorks) {
@@ -23,7 +23,7 @@ TEST(FileMemoryTest, BasicFileFilledWithOneValueWorks) {
     ASSERT_NE(f, nullptr);
     ASSERT_EQ(ftruncate(fileno(f), size), 0);
 
-    FixedFileMemory memory(f);
+    FixedFileMemory memory(f, size, filename);
     ASSERT_EQ(memory.size(), size);
 
     char tmpBuf[1];
@@ -39,8 +39,8 @@ TEST(FileMemoryTest, BasicFileFilledWithOneValueWorks) {
         ASSERT_EQ(*tmpBuf, fillingSymbol);
     }
 
-    ASSERT_EQ(remove(filename), 0);
     fclose(f);
+    ASSERT_EQ(remove(filename), 0);
 }
 
 TEST(FileMemoryTest, DynamicallyExtendingFileWithOneValueWorks) {
@@ -50,7 +50,7 @@ TEST(FileMemoryTest, DynamicallyExtendingFileWithOneValueWorks) {
     FILE *file = fopen(filename, "w+");
     ASSERT_NE(file, nullptr);
 
-    ExtendableFileMemory memory(file);
+    ExtendableFileMemory memory(file, 0, filename);
     ASSERT_EQ(memory.size(), 0);
 
     char tmpBuf[1];
@@ -69,8 +69,8 @@ TEST(FileMemoryTest, DynamicallyExtendingFileWithOneValueWorks) {
 
     ASSERT_EQ(memory.size(), size);
 
-    ASSERT_EQ(remove(filename), 0);
     fclose(file);
+    ASSERT_EQ(remove(filename), 0);
 }
 
 TEST(FileMemoryTest, AfterIncorrectUsageOfFixedEmptyFileExceptionIsThrown) {
@@ -79,7 +79,7 @@ TEST(FileMemoryTest, AfterIncorrectUsageOfFixedEmptyFileExceptionIsThrown) {
     FILE *f = fopen(filename, "w+");
     ASSERT_NE(f, nullptr);
 
-    FixedFileMemory memory(f);
+    FixedFileMemory memory(f, 0, filename);
     ASSERT_EQ(memory.size(), 0);
 
     char tmpBuf[1];
@@ -92,8 +92,8 @@ TEST(FileMemoryTest, AfterIncorrectUsageOfFixedEmptyFileExceptionIsThrown) {
         EXPECT_EQ(std::string(me.what()), std::string("error during std::fread"));
     }
 
-    ASSERT_EQ(remove(filename), 0);
     fclose(f);
+    ASSERT_EQ(remove(filename), 0);
 }
 
 TEST(FileMemoryTest, AfterIncorrectUsageOfFixedNonemptyFileExceptionIsThrown) {
@@ -103,7 +103,7 @@ TEST(FileMemoryTest, AfterIncorrectUsageOfFixedNonemptyFileExceptionIsThrown) {
     FILE *f = fopen(filename, "w+");
     ASSERT_NE(f, nullptr);
 
-    FixedFileMemory memory(f);
+    FixedFileMemory memory(f, size, filename);
 
     char tmpBuf[] = "1";
     for (Offset i = 0; i < size; ++i) {
@@ -130,7 +130,7 @@ TEST(FileMemoryTest, NonSequentialWriteOperationToExtendableFileMemoryWorks) {
     FILE *f = fopen(filename, "w+");
     ASSERT_NE(f, nullptr);
 
-    ExtendableFileMemory memory(f);
+    ExtendableFileMemory memory(f, size, filename);
 
     char tmpBuf[] = "1";
     for (Offset i = 0; i < size; ++i) {

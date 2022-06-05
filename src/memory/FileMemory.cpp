@@ -2,7 +2,11 @@
 
 
 /* FixedFileMemory member functions definitions */
-FixedFileMemory::FixedFileMemory(FILE *file) : _file(file) {}
+FixedFileMemory::FixedFileMemory(
+        FILE *file,
+        Size size,
+        std::string filename
+) : _file(file), _size(size), _filename(std::move(filename)) {}
 
 void FixedFileMemory::changeFilePosition(Offset offset) {
     if (std::fseek(_file, offset, SEEK_SET) < 0) {
@@ -25,19 +29,23 @@ void FixedFileMemory::read(Offset offset, Size count, void *data) {
 }
 
 Size FixedFileMemory::size() {
-    std::fseek(_file, 0L, SEEK_END);
-    return std::ftell(_file);
+    return _size;
 }
 
 
 /* ExtendableFileMemory member functions definitions */
-ExtendableFileMemory::ExtendableFileMemory(FILE *file) : FixedFileMemory(file) {}
+ExtendableFileMemory::ExtendableFileMemory(
+        FILE *file,
+        Size size,
+        std::string filename
+) : FixedFileMemory(file, size, std::move(filename)) {}
 
 void ExtendableFileMemory::write(Offset offset, Size count, void *data) {
-    if (offset + count > FixedFileMemory::size()) {
+    if (offset + count > _size) {
         if (ftruncate(fileno(_file), offset + count) < 0) {
             throw MemoryException("error during ftruncate");
         }
+        _size = offset + count;
     }
     FixedFileMemory::write(offset, count, data);
 }
