@@ -22,10 +22,10 @@ enable_testing()
 # here all files containing tests will be
 add_executable(
         KVik_test
-        src/memory/test/DRAMMemoryTests.cpp
-        src/memory/test/FileMemoryTests.cpp
-        src/memory/test/MallocDRAMMemoryAllocatorTests.cpp
-        src/memory/test/DirectoryFileMemoryAllocatorTests.cpp
+        test/DRAMMemoryTests.cpp
+        test/FileMemoryTests.cpp
+        test/MallocDRAMMemoryAllocatorTests.cpp
+        test/DirectoryFileMemoryAllocatorTests.cpp
         src/memory/DRAMMemory.cpp
         src/memory/FileMemory.cpp
         src/memory/MallocDRAMMemoryAllocator.cpp
