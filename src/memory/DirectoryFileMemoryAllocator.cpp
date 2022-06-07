@@ -1,6 +1,6 @@
 #include <random>
 #include <string>
-#include "DirectoryFileMemoryAllocator.hpp"
+#include "memory/DirectoryFileMemoryAllocator.hpp"
 
 std::string generateRandomFilename(const std::string& prefix) {
     static std::random_device dev;

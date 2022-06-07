@@ -5,6 +5,8 @@ project(KVik)
 set(CMAKE_CXX_STANDARD 17)
 include_directories(src)
 
+include_directories(include/KVik)
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
