@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "memory/DRAMMemory.hpp"
+#include "memory/DRAMMemory.h"
 
 TEST(DRAMMemoryTest, EmptyBufferContructingWorks) {
     DRAMMemory memory(nullptr, 0);

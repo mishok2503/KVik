@@ -2,7 +2,7 @@
 #define KVIK_MEMORY_ALLOCATOR_H
 
 #include <memory>
-#include "Memory.hpp"
+#include "Memory.h"
 
 struct MemoryAllocator {
     virtual std::unique_ptr<Memory> alloc(Size size) = 0;

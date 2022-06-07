@@ -4,7 +4,7 @@
 #include <memory>
 #include <cstdio>
 #include <fcntl.h>
-#include "FileMemory.hpp"
+#include "FileMemory.h"
 #include "MemoryAllocator.h"
 
 std::string generateRandomFilename(const std::string& prefix);

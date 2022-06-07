@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "memory/MallocDRAMMemoryAllocator.hpp"
+#include "memory/MallocDRAMMemoryAllocator.h"
 
 
 TEST(MallocDRAMMemoryAllocatorTest, AllocatingEmptyMemoryWorks) {

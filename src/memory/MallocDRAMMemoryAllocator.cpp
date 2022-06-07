@@ -1,6 +1,6 @@
 #include <memory>
-#include "memory/MallocDRAMMemoryAllocator.hpp"
-#include "memory/DRAMMemory.hpp"
+#include "memory/MallocDRAMMemoryAllocator.h"
+#include "memory/DRAMMemory.h"
 
 std::unique_ptr<Memory> MallocDRAMMemoryAllocator::alloc(Size size) {
     void *buf = malloc(size);

@@ -1,4 +1,4 @@
-#include "DirectoryFileMemoryAllocator.hpp"
-#include "FileMemory.hpp"
+#include "DirectoryFileMemoryAllocator.h"
+#include "FileMemory.h"
 
 using DirectoryExtandableFileMemoryAllocator = DirectoryFileMemoryAllocator<ExtendableFileMemory>;

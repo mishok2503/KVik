@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "memory/FileMemory.hpp"
+#include "memory/FileMemory.h"
 
 
 TEST(FileMemoryTest, EmptyFileWorks) {

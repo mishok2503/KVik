@@ -5,8 +5,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include "Memory.hpp"
-#include "DirectoryFileMemoryAllocator.hpp"
+#include "Memory.h"
+#include "DirectoryFileMemoryAllocator.h"
 
 struct FixedFileMemory : Memory {
 

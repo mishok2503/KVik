@@ -1,4 +1,4 @@
-#include "memory/FileMemory.hpp"
+#include "memory/FileMemory.h"
 
 
 /* FixedFileMemory member functions definitions */
