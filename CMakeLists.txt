@@ -5,7 +5,8 @@ project(KVik)
 set(CMAKE_CXX_STANDARD 17)
 include_directories(src)
 
-include_directories(include/KVik)
+include_directories(include/KVik) # TODO: remove
+include_directories(include/)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -26,10 +27,14 @@ add_executable(
         test/FileMemoryTests.cpp
         test/MallocDRAMMemoryAllocatorTests.cpp
         test/DirectoryFileMemoryAllocatorTests.cpp
+        test/TEST.cpp
         src/memory/DRAMMemory.cpp
         src/memory/FileMemory.cpp
         src/memory/MallocDRAMMemoryAllocator.cpp
         src/memory/DirectoryFileMemoryAllocator.cpp
+        src/Shard.cpp
+        src/KvikBuilder.cpp
+        src/KVikImpl.cpp
 )
 # just an entry point for tests
 target_link_libraries(
