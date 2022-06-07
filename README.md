@@ -116,7 +116,7 @@ additional complexity for supporting custom user requests written in somewhat li
 
 So, if you actually don't need anything more complex than these operations, **KVik** is a viable option for you.
 
-For detailed explanation on how these operations work in **KVik** check [this file](./API_DESCRIPTION.md).
+For detailed explanation on how these operations work in **KVik** check [this file](Docs/API_DESCRIPTION.md).
 
 ## Metrics
 
@@ -129,4 +129,4 @@ For detailed explanation on how these operations work in **KVik** check [this fi
 As you can see, this storage will be good solution for you in case read requests are more often than modification
 requests like `update` and `insert` (which is realistic scenario for some systems).
 
-For detailed explanation about metrics read [this pdf file](./metrics.pdf).
+For detailed explanation about metrics read [this pdf file](Docs/metrics.pdf).
