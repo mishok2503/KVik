@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "memory/DirectoryFixedFileMemoryAllocator.h"
-#include "memory/DirectoryExtandableFileMemoryAllocator.h"
+#include "KVik/memory/DirectoryFixedFileMemoryAllocator.h"
+#include "KVik/memory/DirectoryExtandableFileMemoryAllocator.h"
 
 TEST(DirectoryFixedFileMemoryAllocatorTest, EmptyFileAllocationAndDeallocationWorks) {
     DirectoryFixedFileMemoryAllocator allocator(".", "test-empty");

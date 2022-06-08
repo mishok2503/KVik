@@ -9,7 +9,7 @@ class KVikBuilder {
 
 
 public:
-    std::unique_ptr<KVik> build() const;
+    [[nodiscard]] std::unique_ptr<KVik> build() const;
 };
 
 

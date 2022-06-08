@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-constexpr size_t KEY_SIZE = 8;
+constexpr size_t KEY_SIZE = 16;
 constexpr size_t VALUE_SIZE = 2048;
 
 struct Key {

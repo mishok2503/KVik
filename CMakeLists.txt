@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 project(KVik)
 
 set(CMAKE_CXX_STANDARD 17)
+
+# should already be installed locally, installation guide that may be useful: https://github.com/Cyan4973/xxHash/tree/dev/cmake_unofficial
+find_package(xxHash 0.7 CONFIG REQUIRED)
+
 include_directories(src)
 
 include_directories(include/KVik) # TODO: remove
@@ -23,10 +27,11 @@ enable_testing()
 # here all files containing tests will be
 add_executable(
         KVik_test
-        test/DRAMMemoryTests.cpp
-        test/FileMemoryTests.cpp
-        test/MallocDRAMMemoryAllocatorTests.cpp
-        test/DirectoryFileMemoryAllocatorTests.cpp
+        test/memory/DRAMMemoryTests.cpp
+        test/memory/FileMemoryTests.cpp
+        test/memory/MallocDRAMMemoryAllocatorTests.cpp
+        test/memory/DirectoryFileMemoryAllocatorTests.cpp
+        test/structures/XXH32BloomFilterTests.cpp
         test/TEST.cpp
         src/memory/DRAMMemory.cpp
         src/memory/FileMemory.cpp
@@ -41,6 +46,8 @@ target_link_libraries(
         KVik_test
         gtest_main
 )
+
+target_link_libraries(KVik_test xxHash::xxhash)
 
 include(GoogleTest)
 gtest_discover_tests(KVik_test)

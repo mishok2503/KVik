@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "memory/FileMemory.h"
+#include "KVik/memory/FileMemory.h"
 
 
 TEST(FileMemoryTest, EmptyFileWorks) {
