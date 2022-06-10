@@ -9,7 +9,6 @@ find_package(xxHash 0.7 CONFIG REQUIRED)
 
 include_directories(src)
 
-include_directories(include/KVik) # TODO: remove
 include_directories(include/)
 
 include(FetchContent)
@@ -40,6 +39,10 @@ add_executable(
         src/Shard.cpp
         src/KvikBuilder.cpp
         src/KVikImpl.cpp
+        src/structures/IndexImpl.cpp
+        src/structures/LogImpl.cpp
+        src/structures/SsdData.cpp
+        src/structures/HddData.cpp
 )
 # just an entry point for tests
 target_link_libraries(

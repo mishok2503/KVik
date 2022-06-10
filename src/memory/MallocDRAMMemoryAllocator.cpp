@@ -1,6 +1,8 @@
+#include "KVik/memory/MallocDRAMMemoryAllocator.h"
+
 #include <memory>
-#include "memory/MallocDRAMMemoryAllocator.h"
-#include "memory/DRAMMemory.h"
+
+#include "KVik/memory/DRAMMemory.h"
 
 std::unique_ptr<Memory> MallocDRAMMemoryAllocator::alloc(Size size) {
     void *buf = malloc(size);

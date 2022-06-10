@@ -1,4 +1,4 @@
-#include "memory/FileMemory.h"
+#include "KVik/memory/FileMemory.h"
 
 
 /* FixedFileMemory member functions definitions */

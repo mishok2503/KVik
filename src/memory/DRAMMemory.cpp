@@ -1,4 +1,4 @@
-#include "memory/DRAMMemory.h"
+#include "KVik/memory/DRAMMemory.h"
 
 void DRAMMemory::checkRange(Offset offset, Size count) const {
     if (offset + count > _bufSize) {
