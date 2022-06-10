@@ -33,7 +33,7 @@ TEST(XXH32BloomFilterTests, FilterWorksCorrectlyForSmallAmountOfObjects) {
     std::vector<Key> buf;
     for (int i = 0; i < recordsCount; ++i) {
         // this is pretty much scenario that should be used inside Shard to invoke rebuild operation
-        if (filter.filled() * 2 > filter.size()) {
+        if (filter.filled() * 5 > filter.size()) {
             filter.rebuildFrom(buf);
         }
         Key key = generateRandomKey();
@@ -62,7 +62,7 @@ TEST(XXH32BloomFilterTests, FilterWorksCorrectlyForBigAmountOfObjects) {
     std::vector<Key> buf;
     for (int i = 0; i < recordsCount; ++i) {
         // this is pretty much scenario that should be used inside Shard to invoke rebuild operation
-        if (filter.filled() * 2 > filter.size()) {
+        if (filter.filled() * 5 > filter.size()) {
             filter.rebuildFrom(buf);
         }
         Key key = generateRandomKey();
