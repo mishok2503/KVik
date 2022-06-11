@@ -21,7 +21,10 @@ private:
     ptr<DataFile> fastData;
 
 public:
-
+    void add(Key, Value);
+    Value get(Key);
+    void remove(Key);
+    void clear();
 };
 
 
