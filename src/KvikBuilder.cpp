@@ -3,5 +3,5 @@
 #include "KVik/KVikImpl.h"
 
 std::unique_ptr<KVik> KVikBuilder::build() const {
-    return std::make_unique<KVikImpl>();
+    return std::unique_ptr<KVik>(new KVikImpl(10));
 }
