@@ -14,7 +14,8 @@ std::future<void> KVikImpl::add(Key key, Value value) {
 
 std::future<Value> KVikImpl::get(Key key) {
     size_t n = getShardNum(key);
-    return pools[n]->enqueue([&] { return shards[n]->get(key); });
+//    return pools[n]->enqueue([&] { return shards[n]->get(key); });
+    return pools[n]->enqueue([this, key, n] { return shards[n]->get(key); });
 }
 
 std::future<void> KVikImpl::clear() {

@@ -12,6 +12,14 @@ TEST(HddDataTest, EmptyWorks) {
     ASSERT_EQ(data.size(), 0);
 }
 
+static Value getRndValue() {
+    Value value = {};
+    for (char &i : value.data) {
+        i = rand() % 100;
+    }
+    return value;
+}
+
 TEST(HddDataTest, AddAndRemoveOneRecordWorks) {
     std::unique_ptr<MemoryAllocator> allocator = std::make_unique<DirectoryExtandableFileMemoryAllocator>(".", "test-hdd-data");
     HddData data(std::move(allocator));
@@ -24,9 +32,7 @@ TEST(HddDataTest, AddAndRemoveOneRecordWorks) {
     ASSERT_EQ(data.size(), 1);
     Value readValue = data.read(offset);
     ASSERT_EQ(data.size(), 1);
-    for (int i = 0; i < VALUE_SIZE; ++i) {
-        EXPECT_EQ(readValue.data[i], value.data[i]);
-    }
+    EXPECT_EQ(readValue, value);
     data.remove(offset);
     ASSERT_EQ(data.size(), 0);
 }
@@ -36,14 +42,6 @@ TEST(HddDataTest, ManyRecordsStressTest) {
     HddData data(std::move(allocator));
     std::unordered_map<Offset, Value> dataFileSimulator;
     constexpr int N = 1000;
-
-    std::function<Value()> getRndValue = [&] () {
-        Value value = {};
-        for (char &i : value.data) {
-            i = rand() % 100;
-        }
-        return value;
-    };
 
     ASSERT_EQ(data.size(), 0);
 
@@ -55,9 +53,7 @@ TEST(HddDataTest, ManyRecordsStressTest) {
 
     for (auto const &[offset, value] : dataFileSimulator) {
         Value readValue = data.read(offset);
-        for (int i = 0; i < VALUE_SIZE; ++i) {
-            EXPECT_EQ(readValue.data[i], value.data[i]);
-        }
+        EXPECT_EQ(readValue, value);
     }
 
     int cnt = 0;
@@ -66,6 +62,29 @@ TEST(HddDataTest, ManyRecordsStressTest) {
         ++cnt;
         EXPECT_EQ(data.size(), dataFileSimulator.size() - cnt);
     }
+
+    ASSERT_EQ(data.size(), 0);
+}
+
+TEST(HddDataTest, WriteAfterRemoveWorkds) {
+    std::unique_ptr<MemoryAllocator> allocator = std::make_unique<DirectoryExtandableFileMemoryAllocator>(".", "test-hdd-data");
+    HddData data(std::move(allocator));
+    ASSERT_EQ(data.size(), 0);
+
+    Value value = getRndValue();
+    Offset offset = data.write(value);
+    EXPECT_EQ(data.size(), 1);
+    Value readValue = data.read(offset);
+    EXPECT_EQ(readValue, value);
+
+    data.remove(offset);
+    EXPECT_EQ(data.size(), 0);
+    Offset newOffset = data.write(value);
+    EXPECT_EQ(newOffset, offset);
+    Value newValue = data.read(offset);
+    EXPECT_EQ(newValue, value);
+    EXPECT_EQ(data.size(), 1);
+    data.remove(offset);
 
     ASSERT_EQ(data.size(), 0);
 }

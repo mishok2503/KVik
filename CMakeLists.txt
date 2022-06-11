@@ -41,6 +41,7 @@ add_executable(
         src/Shard.cpp
         src/KvikBuilder.cpp
         src/KVikImpl.cpp
+        src/KeyValue.cpp
         src/structures/IndexImpl.cpp
         src/structures/LogImpl.cpp
         src/structures/SsdData.cpp
