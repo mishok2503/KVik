@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "KVik/KVik.h"
-#include "KVik/structures/ThreadPool.h"
+#include "KVik/ThreadPool.h"
 #include "KVik/Shard.h"
 
 class KVikImpl : public KVik {
