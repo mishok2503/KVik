@@ -10,7 +10,7 @@
 
 class KVikImpl : public KVik {
 private:
-    std::vector<ThreadPool> pools;
+    std::vector<std::unique_ptr<ThreadPool>> pools;
 
     std::vector<std::unique_ptr<Shard>> shards;
 
