@@ -12,7 +12,7 @@ TEST(XXH32BloomFilterTests, EmptyFilterWorks) {
     EXPECT_EQ(filter.check(Key{}), false);
 }
 
-Key generateRandomKey() {
+static Key generateRandomKey() {
     static std::random_device rd;
     static std::mt19937_64 rng(rd());
     static std::uniform_int_distribution<uint64_t> dist(0, UINT64_MAX);

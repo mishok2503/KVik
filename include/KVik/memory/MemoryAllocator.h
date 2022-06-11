@@ -8,6 +8,8 @@ struct MemoryAllocator {
     virtual std::unique_ptr<Memory> alloc(Size size) = 0;
 
     virtual void dealloc(std::unique_ptr<Memory> &&memory) = 0;
+
+    virtual ~MemoryAllocator() = default;
 };
 
 #endif

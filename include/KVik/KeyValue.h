@@ -14,4 +14,6 @@ struct Value {
     char data[VALUE_SIZE];
 };
 
+using KeyValue = std::pair<Key, Value>;
+
 #endif //KVIK_KEYVALUE_H
