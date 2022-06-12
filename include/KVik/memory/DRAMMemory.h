@@ -7,6 +7,7 @@
 #include "Memory.h"
 
 struct MallocDRAMMemoryAllocator;
+struct MmapDRAMMemoryAllocator;
 
 struct DRAMMemory : Memory {
 
@@ -25,6 +26,8 @@ public:
     Size size() noexcept override;
 
     friend struct MallocDRAMMemoryAllocator;
+
+    friend struct MmapDRAMMemoryAllocator;
 
 private:
 

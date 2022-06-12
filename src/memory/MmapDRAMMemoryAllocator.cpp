@@ -14,3 +14,12 @@ std::unique_ptr<Memory> MmapDRAMMemoryAllocator::alloc(Size size) {
     }
     return std::make_unique<DRAMMemory>(buf, size);
 }
+
+void MmapDRAMMemoryAllocator::dealloc(std::unique_ptr<Memory> &&memory) {
+    // NOLINTNEXTLINE
+    auto *memoryPtr = static_cast<DRAMMemory *>(memory.get());
+    // TODO: handle munmap error
+    munmap(memoryPtr->_buf, memoryPtr->_bufSize);
+    memoryPtr->_bufSize = 0;
+    memoryPtr->_buf = nullptr;
+}
