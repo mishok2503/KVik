@@ -38,6 +38,7 @@ add_executable(
         src/memory/FileMemory.cpp
         src/memory/MallocDRAMMemoryAllocator.cpp
         src/memory/DirectoryFileMemoryAllocator.cpp
+        src/memory/MmapDRAMMemoryAllocator.cpp
         src/Shard.cpp
         src/KvikBuilder.cpp
         src/KVikImpl.cpp
