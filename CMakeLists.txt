@@ -32,6 +32,7 @@ add_executable(
         test/memory/DirectoryFileMemoryAllocatorTests.cpp
         test/structures/XXH32BloomFilterTests.cpp
         test/structures/HddDataTests.cpp
+        test/memory/MmapDRAMMemoryAllocatorTests.cpp
         test/TEST.cpp
         src/memory/DRAMMemory.cpp
         src/structures/HddData.cpp

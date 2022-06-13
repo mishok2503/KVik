@@ -44,6 +44,17 @@ struct DirectoryFileMemoryAllocator : MemoryAllocator {
         return std::make_unique<FileMemoryT>(file, size, nextFilename);
     }
 
+    std::unique_ptr<Memory> alloc(std::unique_ptr<Memory> &&memory, Size size) override {
+        // static cast is faster and in this case we are sure that the same type of memory is deallocated, otherwise it is programmer's mistake
+        // NOLINTNEXTLINE
+        auto *memoryPtr = static_cast<FileMemoryT *>(memory.get());
+        if (ftruncate(fileno(memoryPtr->_file), size) < 0) {
+            throw AllocationException("error while attempting to reallocate file using ftruncate");
+        }
+        memoryPtr->_size = size;
+        return std::unique_ptr<Memory>(memoryPtr);
+    }
+
     void dealloc(std::unique_ptr<Memory> &&memory) override {
         // static cast is faster and in this case we are sure that the same type of memory is deallocated, otherwise it is programmer's mistake
         // NOLINTNEXTLINE
