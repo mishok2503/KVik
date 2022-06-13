@@ -2,9 +2,7 @@
 #define KVIK_KEYVALUE_H
 
 #include <cstddef>
-
-constexpr size_t KEY_SIZE = 16;
-constexpr size_t VALUE_SIZE = 2048;
+#include <KVik/Constants.h>
 
 struct Key {
     char data[KEY_SIZE];
