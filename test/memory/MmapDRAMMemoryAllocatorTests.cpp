@@ -64,6 +64,13 @@ TEST(MmapDRAMMemoryAllocatorTest, ReallocatingEmptyToNonemptyWorks) {
     ASSERT_EQ(memory->size(), 0);
     memory = allocator.alloc(std::move(memory), reallocatedSize);
     ASSERT_EQ(memory->size(), reallocatedSize);
+
+    char byte;
+    for (Offset i = 0; i < reallocatedSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
     allocator.dealloc(std::move(memory));
 }
 
@@ -72,6 +79,13 @@ TEST(MmapDRAMMemoryAllocatorTest, ReallocatingNonemptyToEmptyWorks) {
     MmapDRAMMemoryAllocator allocator;
     std::unique_ptr<Memory> memory = allocator.alloc(allocatedSize);
     ASSERT_EQ(memory->size(), allocatedSize);
+
+    char byte;
+    for (Offset i = 0; i < allocatedSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
     memory = allocator.alloc(std::move(memory), 0);
     ASSERT_EQ(memory->size(), 0);
     allocator.dealloc(std::move(memory));
@@ -83,8 +97,22 @@ TEST(MmapDRAMMemoryAllocatorTest, ReallocatingNonemptyToNonemptyToBiggerWorks) {
     MmapDRAMMemoryAllocator allocator;
     std::unique_ptr<Memory> memory = allocator.alloc(allocatedSize);
     ASSERT_EQ(memory->size(), allocatedSize);
+
+    char byte;
+
+    for (Offset i = 0; i < allocatedSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
     memory = allocator.alloc(std::move(memory), reallocatedSize);
     ASSERT_EQ(memory->size(), reallocatedSize);
+
+    for (Offset i = 0; i < reallocatedSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
     allocator.dealloc(std::move(memory));
 }
 
@@ -94,7 +122,21 @@ TEST(MmapDRAMMemoryAllocatorTest, ReallocatingNonemptyToNonemptyToSmallerWorks) 
     MmapDRAMMemoryAllocator allocator;
     std::unique_ptr<Memory> memory = allocator.alloc(allocatedSize);
     ASSERT_EQ(memory->size(), allocatedSize);
+
+    char byte;
+
+    for (Offset i = 0; i < allocatedSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
     memory = allocator.alloc(std::move(memory), reallocatedSize);
     ASSERT_EQ(memory->size(), reallocatedSize);
+
+    for (Offset i = 0; i < reallocatedSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
     allocator.dealloc(std::move(memory));
 }
