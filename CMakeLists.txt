@@ -45,10 +45,11 @@ add_executable(
         src/KVikImpl.cpp
         src/KeyValue.cpp
         src/structures/IndexImpl.cpp
+        src/structures/IndexHashTable.cpp
         src/structures/LogImpl.cpp
         src/structures/SsdData.cpp
         src/structures/HddData.cpp
-)
+        )
 # just an entry point for tests
 target_link_libraries(
         KVik_test
