@@ -21,6 +21,8 @@ public:
 
     void write(Offset offset, Size count, void *data) override;
 
+    void write(Offset offset, Size count, void const *data) override;
+
     void read(Offset offset, Size count, void *data) override;
 
     Size size() noexcept override;

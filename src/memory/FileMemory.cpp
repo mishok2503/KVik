@@ -14,11 +14,15 @@ void FixedFileMemory::changeFilePosition(Offset offset) {
     }
 }
 
-void FixedFileMemory::write(Offset offset, Size count, void *data) {
+void FixedFileMemory::write(Offset offset, Size count, void const *data) {
     changeFilePosition(offset);
     if (std::fwrite(data, 1, count, _file) != count) {
         throw MemoryException("error during std::fwrite");
     }
+}
+
+void FixedFileMemory::write(Offset offset, Size count, void *data) {
+    write(offset, count, (void const*) data);
 }
 
 void FixedFileMemory::read(Offset offset, Size count, void *data) {
@@ -40,7 +44,7 @@ ExtendableFileMemory::ExtendableFileMemory(
         std::string filename
 ) : FixedFileMemory(file, size, std::move(filename)) {}
 
-void ExtendableFileMemory::write(Offset offset, Size count, void *data) {
+void ExtendableFileMemory::write(Offset offset, Size count, void const *data) {
     if (offset + count > _size) {
         if (ftruncate(fileno(_file), offset + count) < 0) {
             throw MemoryException("error during ftruncate");
@@ -48,4 +52,8 @@ void ExtendableFileMemory::write(Offset offset, Size count, void *data) {
         _size = offset + count;
     }
     FixedFileMemory::write(offset, count, data);
+}
+
+void ExtendableFileMemory::write(Offset offset, Size count, void *data) {
+    write(offset, count, (void const*) data);
 }

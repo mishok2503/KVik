@@ -16,6 +16,7 @@ struct MemoryException : std::runtime_error {
 struct Memory {
 
     virtual void write(Offset offset, Size count, void *data) = 0;
+    virtual void write(Offset offset, Size count, void const *data) = 0;
 
     // it was possible to return void* instead, however the problem is that someone should free this memory,
     // it either leads to inconvenient API with function like "void freeBuffer(void* buffer)" so that memory

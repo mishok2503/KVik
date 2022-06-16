@@ -20,6 +20,8 @@ public:
 
     void write(Offset offset, Size count, void *data) override;
 
+    void write(Offset offset, Size count, void const *data) override;
+
     void read(Offset offset, Size count, void *data) override;
 
     Size size() override;
@@ -43,6 +45,8 @@ struct ExtendableFileMemory : FixedFileMemory {
     explicit ExtendableFileMemory(FILE *file, Size size, std::string filename);
 
     void write(Offset offset, Size count, void *data) override;
+
+    void write(Offset offset, Size count, void const *data) override;
 
 };
 
