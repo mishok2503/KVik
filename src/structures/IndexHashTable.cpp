@@ -73,6 +73,7 @@ void IndexHashTable::put(const Key &key, int64_t value) {
     memcpy(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE, &key.data, KEY_SIZE);
     memcpy(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE + KEY_SIZE, &value, sizeof(value));
     memory->write(bucketNum * BUCKET_SIZE, BUCKET_SIZE, buffer);
+    size++;
 }
 
 int64_t IndexHashTable::get(Key const &key) {
@@ -87,8 +88,10 @@ int64_t IndexHashTable::get(Key const &key) {
         if(!compareKeys(key.data, buffer + HEADER_SIZE + pos * HT_VALUE_SIZE)) {
             continue;
         }
+        size++;
         return *(int64_t*)(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE + KEY_SIZE);
     }
+    //didn't find
     return 0;
 }
 
@@ -105,6 +108,11 @@ void IndexHashTable::remove(Key const &key) {
             continue;
         }
         (*(std::bitset<HEADER_SIZE_BITS>*)buffer)[pos] = false;
+        size--;
         return;
     }
+}
+
+uint64_t IndexHashTable::size() {
+    return size;
 }
