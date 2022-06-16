@@ -47,7 +47,7 @@ add_executable(
         src/KeyValue.cpp
         src/structures/IndexImpl.cpp
         src/structures/IndexHashTable.cpp
-        src/structures/LogImpl.cpp
+        src/structures/Log.cpp
         src/structures/SsdData.cpp
         src/structures/HddData.cpp
         )

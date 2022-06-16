@@ -15,3 +15,8 @@ void Shard::remove(Key) {
 void Shard::clear() {
 
 }
+
+Shard::Shard(Shard::ptr<MemoryAllocator> indexAlloc, Shard::ptr<MemoryAllocator> logAlloc,
+             Shard::ptr<MemoryAllocator> dataAlloc, Shard::ptr<MemoryAllocator> fastDataAlloc) {
+
+}
