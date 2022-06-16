@@ -8,6 +8,7 @@
 #include "KVik/structures/DataFile.h"
 #include "KVik/structures/Log.h"
 #include "KVik/KeyValue.h"
+#include "KVik/memory/MemoryAllocator.h"
 
 class Shard {
 private:
@@ -21,6 +22,9 @@ private:
     ptr<DataFile> fastData;
 
 public:
+    Shard(ptr<MemoryAllocator> indexAlloc, ptr<MemoryAllocator> logAlloc,
+          ptr<MemoryAllocator> dataAlloc, ptr<MemoryAllocator> fastDataAlloc);
+
     void add(Key, Value);
     Value get(Key);
     void remove(Key);
