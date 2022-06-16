@@ -12,7 +12,7 @@ private:
     std::unique_ptr<Memory> memory;
     std::unique_ptr<ZeroedMemoryAllocator> allocator;
     char buffer[BUCKET_SIZE]{};
-    uint64_t size = 0;
+    uint64_t _size = 0;
 
     void resize();
 
