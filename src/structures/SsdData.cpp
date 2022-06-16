@@ -10,15 +10,29 @@ Offset SsdData::add(KeyValue const &keyValue) {
     Offset curSize = fetchSize();
     Offset endPtr = SSD_DATA_HEADER_SIZE + curSize * sizeof(KeyValue);
     _memory->write(endPtr, sizeof (KeyValue), &keyValue);
+
+    if (endPtr + sizeof (KeyValue) == SSD_DATA_FILE_SIZE) {
+        // merge with DataFile should be invoked
+    }
+
     return endPtr;
 }
 
 void SsdData::remove(Offset offset) {
-
+    char zeroes[sizeof(KeyValue)] = {};
+    // just mark it zero, in assumption that key is never zero
+    _memory->write(offset, sizeof (KeyValue), zeroes);
 }
 
-std::optional<Value> SsdData::get(Offset) {
-    return {};
+std::optional<Value> SsdData::get(Offset offset) {
+    KeyValue kv;
+    std::optional<Value> optValue;
+    _memory->read(offset, sizeof (KeyValue), &kv);
+    if (kv.first == Key{}) {
+        return optValue;
+    }
+    optValue.emplace(kv.second);
+    return optValue;
 }
 
 Offset SsdData::fetchSize() {
