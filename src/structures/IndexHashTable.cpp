@@ -30,7 +30,7 @@ void IndexHashTable::resize() {
             if (!mask[pos]) {
                 continue;
             }
-            auto key = Key();
+            auto key = Key{};
             memcpy(&key.data, buffer + HEADER_SIZE + pos * HT_VALUE_SIZE, KEY_SIZE);
             int64_t value = *(int64_t*)(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE + KEY_SIZE);
             put(key, value);
@@ -39,7 +39,7 @@ void IndexHashTable::resize() {
     allocator->dealloc(std::move(oldMemory));
 }
 
-IndexHashTable::IndexHashTable(std::unique_ptr<MemoryAllocator> &&allocatorPtr) {
+IndexHashTable::IndexHashTable(std::unique_ptr<ZeroedMemoryAllocator> &&allocatorPtr) {
     bucketCnt = PRIME_SIZES[0];
     allocator = std::move(allocatorPtr);
     memory = allocator->alloc(bucketCnt * BUCKET_SIZE);
@@ -75,7 +75,7 @@ void IndexHashTable::put(const Key &key, int64_t value) {
     memory->write(bucketNum * BUCKET_SIZE, BUCKET_SIZE, buffer);
 }
 
-int64_t IndexHashTable::get(Key &key) {
+int64_t IndexHashTable::get(Key const &key) {
     uint64_t hash = XXH3_64bits(&key, KEY_SIZE);
     uint64_t bucketNum = hash % bucketCnt;
     memory->read(bucketNum * BUCKET_SIZE, BUCKET_SIZE, buffer);
@@ -92,7 +92,7 @@ int64_t IndexHashTable::get(Key &key) {
     return 0;
 }
 
-void IndexHashTable::remove(Key &key) {
+void IndexHashTable::remove(Key const &key) {
     uint64_t hash = XXH3_64bits(&key, KEY_SIZE);
     uint64_t bucketNum = hash % bucketCnt;
     memory->read(bucketNum * BUCKET_SIZE, BUCKET_SIZE, buffer);

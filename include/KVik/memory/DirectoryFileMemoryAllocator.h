@@ -4,13 +4,14 @@
 #include <memory>
 #include <cstdio>
 #include <fcntl.h>
-#include "FileMemory.h"
-#include "MemoryAllocator.h"
+#include "KVik/memory/FileMemory.h"
+#include "KVik/memory/MemoryAllocator.h"
+#include "KVik/memory/ZeroedMemoryAllocator.h"
 
 std::string generateRandomFilename(const std::string& prefix);
 
 template<typename FileMemoryT>
-struct DirectoryFileMemoryAllocator : MemoryAllocator {
+struct DirectoryFileMemoryAllocator : ZeroedMemoryAllocator {
 
     explicit DirectoryFileMemoryAllocator(
             std::string dirname,
@@ -40,6 +41,9 @@ struct DirectoryFileMemoryAllocator : MemoryAllocator {
         if (!file) {
             throw MemoryException(
                     "error in DirectoryFileMemoryAllocator::alloc, can't open file for reading and writing");
+        }
+        if (ftruncate(fileno(file), size) < 0) {
+            throw AllocationException("couldn't allocate file of given size in this directory");
         }
         return std::make_unique<FileMemoryT>(file, size, nextFilename);
     }

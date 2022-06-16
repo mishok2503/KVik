@@ -23,3 +23,38 @@ TEST(DirectoryFixedFileMemoryAllocatorTest, NonemptyFileAllocationAndDeallocatio
     allocator.dealloc(std::move(firstFile));
     allocator.dealloc(std::move(secondFile));
 }
+
+TEST(DirectoryFixedFileMemoryAllocatorTest, WhenFileIsAllocatedItIsZeroed) {
+    DirectoryFixedFileMemoryAllocator allocator(".", "test-is-zeroed");
+    Size fileSize = 1'000;
+    auto memory = allocator.alloc(fileSize);
+    EXPECT_EQ(memory->size(), fileSize);
+
+    char byte;
+    for (Offset i = 0; i < fileSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+    allocator.dealloc(std::move(memory));
+}
+
+TEST(DirectoryExtandableFileMemoryAllocatorTest, WhenFileIsAllocatedItIsZeroed) {
+    DirectoryExtandableFileMemoryAllocator allocator(".", "test-is-extandable-zeroed");
+    Size fileSize = 1'000;
+    auto memory = allocator.alloc(fileSize);
+    EXPECT_EQ(memory->size(), fileSize);
+
+    char byte;
+    for (Offset i = 0; i < fileSize; ++i) {
+        memory->read(i, 1, &byte);
+        EXPECT_EQ(byte, 0);
+    }
+
+    byte = 'k';
+    memory->write(fileSize, 1, &byte);
+    EXPECT_EQ(memory->size(), fileSize + 1);
+    memory->read(fileSize, 1, &byte);
+    EXPECT_EQ(byte, 'k');
+
+    allocator.dealloc(std::move(memory));
+}
