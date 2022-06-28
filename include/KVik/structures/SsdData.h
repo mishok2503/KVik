@@ -17,6 +17,7 @@ public:
     Offset add(KeyValue const &keyValue) override;
     void remove(Offset offset) override;
     std::optional<Value> get(Offset) override;
+    Size size() override;
 
 private:
     Offset fetchSize();

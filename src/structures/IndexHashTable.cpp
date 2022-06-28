@@ -19,9 +19,10 @@ bool compareKeys(const char *key1, const char *key2) {
 
 void IndexHashTable::resize() {
     auto oldMemory = std::move(memory);
-    size_t primes_ind = std::lower_bound(PRIME_SIZES, PRIME_SIZES + PRIME_SIZES_COUNT, bucketCnt) - PRIME_SIZES;
+    size_t primesInd = std::lower_bound(PRIME_SIZES, PRIME_SIZES + PRIME_SIZES_COUNT, bucketCnt) - PRIME_SIZES;
     auto oldBucketCnt = bucketCnt;
-    bucketCnt = PRIME_SIZES[++primes_ind];
+    bucketCnt = PRIME_SIZES[++primesInd];
+    // TODO : allocate place for size
     memory = allocator->alloc(bucketCnt * BUCKET_SIZE);
     for(uint64_t bucketNum = 0; bucketNum < oldBucketCnt; bucketNum++) {
         oldMemory->read(bucketNum * BUCKET_SIZE, BUCKET_SIZE, buffer);
@@ -30,7 +31,7 @@ void IndexHashTable::resize() {
             if (!mask[pos]) {
                 continue;
             }
-            auto key = Key{};
+            Key key{};
             memcpy(&key.data, buffer + HEADER_SIZE + pos * HT_VALUE_SIZE, KEY_SIZE);
             int64_t value = *(int64_t*)(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE + KEY_SIZE);
             put(key, value);
@@ -70,7 +71,7 @@ void IndexHashTable::put(const Key &key, int64_t value) {
         }
     }
     (*(std::bitset<HEADER_SIZE_BITS>*)buffer)[pos] = true;
-    memcpy(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE, &key.data, KEY_SIZE);
+    memcpy(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE, &key, KEY_SIZE);
     memcpy(buffer + HEADER_SIZE + pos * HT_VALUE_SIZE + KEY_SIZE, &value, sizeof(value));
     memory->write(bucketNum * BUCKET_SIZE, BUCKET_SIZE, buffer);
     _size++;

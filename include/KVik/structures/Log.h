@@ -7,12 +7,13 @@
 
 #include "KVik/KeyValue.h"
 #include "KVik/memory/MemoryAllocator.h"
+#include "KVik/structures/DataFile.h"
 
 class Log {
 private:
 
     std::unique_ptr<DataFile> data;
-    std::unordered_map<Key, Offset> map;
+//    std::unordered_map<Key, Offset> map;
 
 public:
     class iterator {

@@ -40,7 +40,7 @@ TEST(IndexHashTableTest, AddingSingleKeyWorks) {
 }
 
 TEST(IndexHashTableTest, AddingSeveralKeysWorks) {
-    constexpr int iters = 1000;
+    constexpr int iters = 1'000;
     std::vector<std::pair<Key, int64_t>> htSimulation;
 
     auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht");
@@ -58,7 +58,7 @@ TEST(IndexHashTableTest, AddingSeveralKeysWorks) {
 
     for (int64_t i = 0; i < iters; ++i) {
         Key randomKey = generateRandomKey();
-        int64_t value = i;
+        int64_t value = i + 1;
         put(randomKey, value);
         indexHT.put(randomKey, value);
     }
@@ -69,7 +69,7 @@ TEST(IndexHashTableTest, AddingSeveralKeysWorks) {
 }
 
 TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
-    constexpr int iters = 1000;
+    constexpr int iters = 10'000;
     std::vector<std::pair<Key, int64_t>> htSimulation;
 
     auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht");
@@ -122,6 +122,6 @@ TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
     }
 
     for (int i = 0; i < htSimulationCopy.size(); ++i) {
-        EXPECT_EQ(indexHT.get(htSimulationCopy[i].first), get(htSimulationCopy, htSimulationCopy[i].first));
+        EXPECT_EQ(indexHT.get(htSimulationCopy[i].first), get(htSimulation, htSimulationCopy[i].first));
     }
 }

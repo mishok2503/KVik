@@ -33,6 +33,7 @@ add_executable(
         test/structures/XXH32BloomFilterTests.cpp
         test/structures/HddDataTests.cpp
         test/structures/IndexHashTableTests.cpp
+        test/structures/SsdDataTests.cpp
         test/memory/MmapDRAMMemoryAllocatorTests.cpp
         test/TEST.cpp
         src/memory/DRAMMemory.cpp

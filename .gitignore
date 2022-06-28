@@ -4,3 +4,5 @@ smhasher
 xxHash
 cmake-build-debug
 build
+lib
+Testing

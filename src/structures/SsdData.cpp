@@ -35,6 +35,10 @@ std::optional<Value> SsdData::get(Offset offset) {
     return optValue;
 }
 
+Size SsdData::size() {
+    return fetchSize();
+}
+
 Offset SsdData::fetchSize() {
     Offset size;
     _memory->read(0, sizeof (Offset), &size);
