@@ -1,10 +1,15 @@
 #include <gtest/gtest.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <climits>
+#include <fcntl.h>
 #include <memory>
 #include <random>
 
 #include "KVik/structures/IndexHashTable.h"
 #include "KVik/memory/DirectoryFixedFileMemoryAllocator.h"
+#include "KVik/memory/MmapDRAMMemoryAllocator.h"
 
 static Key generateRandomKey() {
     static std::random_device rd;
@@ -30,7 +35,7 @@ TEST(IndexHashTableTest, EmptyWorks) {
 TEST(IndexHashTableTest, AddingSingleKeyWorks) {
     constexpr int64_t correspondingOffset = 123'123;
 
-    auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht");
+    auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht-");
     IndexHashTable indexHT(std::move(allocator));
     Key key{};
     EXPECT_EQ(indexHT.get(key), 0);
@@ -39,44 +44,15 @@ TEST(IndexHashTableTest, AddingSingleKeyWorks) {
     // TODO : check size
 }
 
-TEST(IndexHashTableTest, AddingSeveralKeysWorks) {
-    constexpr int iters = 1'000;
-    std::vector<std::pair<Key, int64_t>> htSimulation;
-
-    auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht");
-    IndexHashTable indexHT(std::move(allocator));
-
-    auto put = [&](Key const &key, int64_t value) {
-        for (auto & i : htSimulation) {
-            if (i.first == key) {
-                i.second = value;
-                return;
-            }
-        }
-        htSimulation.emplace_back(key, value);
-    };
-
-    for (int64_t i = 0; i < iters; ++i) {
-        Key randomKey = generateRandomKey();
-        int64_t value = i + 1;
-        put(randomKey, value);
-        indexHT.put(randomKey, value);
-    }
-
-    for (auto &p : htSimulation) {
-        EXPECT_EQ(indexHT.get(p.first), p.second);
-    }
-}
-
 TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
     constexpr int iters = 10'000;
     std::vector<std::pair<Key, int64_t>> htSimulation;
 
-    auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht");
+    auto allocator = std::make_unique<DirectoryFixedFileMemoryAllocator>(".", "index-ht-");
     IndexHashTable indexHT(std::move(allocator));
 
     auto put = [&](std::vector<std::pair<Key, int64_t>> &ht, Key const &key, int64_t value) {
-        for (auto & i : ht) {
+        for (auto &i: ht) {
             if (i.first == key) {
                 i.second = value;
                 return;
@@ -85,7 +61,7 @@ TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
         ht.emplace_back(key, value);
     };
 
-    auto remove = [&] (std::vector<std::pair<Key, int64_t>> &ht, Key const &key) {
+    auto remove = [&](std::vector<std::pair<Key, int64_t>> &ht, Key const &key) {
         for (int i = 0; i < ht.size(); ++i) {
             if (key == ht[i].first) {
                 ht.erase(std::begin(ht) + i);
@@ -94,7 +70,7 @@ TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
         }
     };
 
-    auto get = [&] (std::vector<std::pair<Key, int64_t>> &ht, Key const &key) {
+    auto get = [&](std::vector<std::pair<Key, int64_t>> &ht, Key const &key) {
         for (int i = 0; i < ht.size(); ++i) {
             if (ht[i].first == key) {
                 return ht[i].second;
@@ -110,10 +86,15 @@ TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
         put(htSimulation, key, value);
     }
 
+    for (int64_t i = 0; i < iters; ++i) {
+        ASSERT_EQ(indexHT.get(htSimulation[i].first), get(htSimulation, htSimulation[i].first))
+                                    << "Error before removal";
+    }
+
     std::vector<std::pair<Key, int64_t>> htSimulationCopy = htSimulation;
 
     for (int i = 0; i < htSimulation.size(); ++i) {
-        bool shouldBeRemoved = rand() % 2 == 0;
+        bool shouldBeRemoved = i % 2 == 0;
         if (shouldBeRemoved) {
             Key key = htSimulation[i].first;
             remove(htSimulation, key);
@@ -122,6 +103,8 @@ TEST(IndexHashTableTest, AddingAndRemovingSeveralKeysWorks) {
     }
 
     for (int i = 0; i < htSimulationCopy.size(); ++i) {
-        EXPECT_EQ(indexHT.get(htSimulationCopy[i].first), get(htSimulation, htSimulationCopy[i].first));
+        // ASSERT instead of EXPECT just in order to make output shorter
+        ASSERT_EQ(indexHT.get(htSimulationCopy[i].first), get(htSimulation, htSimulationCopy[i].first))
+                                    << "Error after removal";
     }
 }

@@ -11,7 +11,7 @@ DRAMMemory::DRAMMemory(void *buf, Size bufSize) : _buf(buf), _bufSize(bufSize) {
 
 void DRAMMemory::write(Offset offset, Size count, void const *data) {
     checkRange(offset, count);
-    std::memcpy(_buf, data, count);
+    std::memcpy((char *) _buf + offset, data, count);
 }
 
 void DRAMMemory::write(Offset offset, Size count, void *data) {
@@ -20,7 +20,7 @@ void DRAMMemory::write(Offset offset, Size count, void *data) {
 
 void DRAMMemory::read(Offset offset, Size count, void *data) {
     checkRange(offset, count);
-    std::memcpy(data, _buf, count);
+    std::memcpy(data, (char *) _buf + offset, count);
 }
 
 Size DRAMMemory::size() noexcept {
