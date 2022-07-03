@@ -6,8 +6,7 @@
 constexpr size_t KEY_SIZE = 16;
 constexpr size_t VALUE_SIZE = 2048;
 constexpr size_t OFFSET_SIZE = sizeof(int64_t);
-constexpr uint64_t BUCKET_SIZE = 64;
-//constexpr uint64_t BUCKET_SIZE = 4096;
+constexpr uint64_t BUCKET_SIZE = 4096;
 constexpr int PRIME_SIZES_COUNT = 31;
 
 constexpr uint64_t PRIME_SIZES[PRIME_SIZES_COUNT] = {
