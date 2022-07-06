@@ -17,6 +17,10 @@ private:
 
 public:
     explicit IndexHashTable(std::unique_ptr<ZeroedMemoryAllocator> &&allocatorPtr);
+
+    // WARNING: it is extremely important that actual memory is compatible with allocator that is used for
+    // memory deallocation (for instance, if MmapDRAMMemoryAllocator is used, then dumpedIndexHT should be DRAMMemory,
+    // plus it should have been allocated via mmap)
     explicit IndexHashTable(std::unique_ptr<ZeroedMemoryAllocator> &&allocatorPtr, std::unique_ptr<Memory> &&dumpedIndexHT);
 
     void put(const Key &key, int64_t value);
